@@ -60,6 +60,5 @@ const nav = {
         
     ]
 }
-}
 
 module.exports.nav = nav

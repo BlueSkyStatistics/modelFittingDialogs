@@ -6,7 +6,7 @@ var localization = {
         filterModels: "Filter models by class",
         modelSelection: "Select a model to save",
         importResp: "Select a file to load models from",
-        label1: "All the models in the file specified will be loaded into memory. Note: If you have existing models with the same name, they will be overwritten.",
+        label1: "All the models in the file specified will be loaded into memory. \nYou must EXECUTE the dialog for models to be loaded. \nNote: If you have existing models with the same name, they will be overwritten.",
         levelOfInterest: "When the variable to predict has 2 levels, specify the level of interest. The confusion matrix and related statistics are displayed with the specified level of interest as the reference",
         label12: "Test results: As soon as a model is selected, we will run tests to see whether dependent variables specified in the model are \navailable in the dataset to be scored. The results will be displayed here",
         label2: "Save predicted values and supporting statistics.",
@@ -71,14 +71,15 @@ local ({
             })
         }
         var objects = {
-            label1: { el: new labelVar(config, { label: localization.en.label1, no: "label1", h: 8, style: "mt-3" }) },
+            label1: { el: new preVar(config, { label: localization.en.label1, no: "label1", h: 8, style: "mt-3" }) },
             
             importResp: {
                 el: new fileOpenControl(config, 
                     {
                         no: "importResp", 
                         label: localization.en.importResp,
-                        extraction: "TextAsIs"
+                        extraction: "TextAsIs",
+                        required:true,
                     })}
             
         }

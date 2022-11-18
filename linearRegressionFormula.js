@@ -69,7 +69,7 @@ BSkyFormat(reg_equation)
 #Summarizing the model
 BSky_LM_Summary_{{selected.modelname | safe}} = summary({{selected.modelname | safe}})
 # Computing 95% confidence interval of the coefficients
-BSky_LM_Summary_{{selected.modelname | safe}}$coefficients<- cbind ( BSky_LM_Summary_{{selected.modelname | safe}}$coefficients, stats::confint({{selected.modelname | safe}},level=0.95,type="LR")[rowSums(is.na(stats::confint({{selected.modelname | safe}},level=0.95,type="LR"))) != ncol(stats::confint({{selected.modelname | safe}},level=0.95,type="LR")), ])
+# BSky_LM_Summary_{{selected.modelname | safe}}$coefficients<- cbind ( BSky_LM_Summary_{{selected.modelname | safe}}$coefficients, stats::confint({{selected.modelname | safe}},level=0.95,type="LR")[rowSums(is.na(stats::confint({{selected.modelname | safe}},level=0.95,type="LR"))) != ncol(stats::confint({{selected.modelname | safe}},level=0.95,type="LR")), ])
 BSkyFormat(BSky_LM_Summary_{{selected.modelname | safe}}, singleTableOutputHeader = "Model Summary")
 #Displaying the Anova table
 AnovaRes = anova({{selected.modelname | safe}} )

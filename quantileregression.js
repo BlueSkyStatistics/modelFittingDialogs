@@ -2,7 +2,7 @@
 var localization = {
     en: {
         title: "Quantile Regression",
-        navigation: "Quantile Regression",
+        navigation: "Quantile",
         modelname:"Enter model name",
         depvarlabel: "Dependent Variable",
 		quantilelabel: "Quantile (0-1)",

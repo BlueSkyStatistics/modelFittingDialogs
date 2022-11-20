@@ -25,14 +25,14 @@ const nav = {
             "children": [
                 "./Survival/CoxWithFormula",
                 "./Survival/CoxSingleModel",
-                "./quantileregression",
                 "./linearRegression",
                 "./linearRegressionLegacy",
                 "./linearRegressionFormula",
                 "./logisticRegression",
                 "./logisticRegressionFormula",
                 "./multiNomialLogistic",
-                "./ordinalRegression"
+                "./ordinalRegression",
+                "./quantileregression",
             ]
         },
         "./mixedModelsBasic",

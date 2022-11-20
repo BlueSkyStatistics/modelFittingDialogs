@@ -25,6 +25,7 @@ const nav = {
             "children": [
                 "./Survival/CoxWithFormula",
                 "./Survival/CoxSingleModel",
+                "./quantileregression",
                 "./linearRegression",
                 "./linearRegressionLegacy",
                 "./linearRegressionFormula",

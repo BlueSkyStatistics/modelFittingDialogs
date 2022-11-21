@@ -128,7 +128,7 @@ attr(.GlobalEnv\${{selected.modelname | safe}},"depVarSample")= sample({{dataset
                     overwrite: "dataset"
                 })
             },
-            content_var: { el: new srcVariableList(config, {action: "move"}) },
+            content_var: { el: new srcVariableList(config, {action: "move",scroll: true }) },
             dependent: {
                 el: new dstVariable(config, {
                     label: localization.en.dependent,

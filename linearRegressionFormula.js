@@ -96,7 +96,7 @@ attr(.GlobalEnv\${{selected.modelname | safe}},"depVarSample")= sample({{dataset
 `
         };
         var objects = {
-            content_var: { el: new srcVariableList(config, {action: "move"}) },
+            content_var: { el: new srcVariableList(config, {action: "move",scroll: true }) },
             modelname: {
                 el: new input(config, {
                     no: 'modelname',

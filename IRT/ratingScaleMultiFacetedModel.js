@@ -21,7 +21,6 @@ var localization = {
             tam.mml.mfr( resp,facets=,formulaA = ~ item+step+rater,pid = ,verbose=FALSE)
             </code>
             <br/><br/>
-            <br/><br/>
             <b>Arguments</b>
             <br/>
             <ul>

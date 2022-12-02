@@ -12,6 +12,18 @@ const nav = {
         },
         "./glzm",
         {
+            "name": "IRT",
+            "icon": "icon-brightness-and-contrast",
+            "children": [
+                "./IRT/simpleRaschModel",
+                "./IRT/simpleRaschMultiFacetedModel",
+                "./IRT/partialCreditModel",
+                "./IRT/partialCreditMultiFacetedModel",
+                "./IRT/ratingScaleModel",
+                "./IRT/ratingScaleMultiFacetedModel"
+            ]
+        },
+        {
             "name": "KNN",
             "icon": "icon-network",
             "children": [

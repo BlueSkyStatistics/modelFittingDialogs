@@ -61,14 +61,11 @@ local ({
     allModels <- BSkyGetAvailableModelsCP(objclasslist ='All_Models')
     #Filtering models loaded from file
     modelsFromFile <- base::Filter(function(x) !is.null(base::attr(eval(parse(text=x)), "BSkyModel")), allModels)
-    cat("The following models (separated by comma) are loaded from the file: ", paste(modelsFromFile , collapse =", ") ,"\n")
+    cat(paste("The following model(s) (separated by comma):", paste(modelsFromFile , collapse =", "), "are loaded from the file\n"))
     #Removing the attribute BSkyModel, we have introduced a variable BSkyTemp to suppress unnecessary output
     BSkyTemp <- sapply(modelsFromFile, function(x) eval(parse (text = paste ("attr(.GlobalEnv$" , x, ", 'BSkyModel') <- NULL" ))))
 })
-`,
-            pre_start_r: JSON.stringify({
-                modelSelection: "BSkyGetAvailableModelsCP(objclasslist ='All_Models')",
-            })
+`
         }
         var objects = {
             label1: { el: new labelVar(config, { label: localization.en.label1, no: "label1", h: 8, style: "mt-3" }) },
@@ -87,8 +84,7 @@ local ({
             nav: {
                 name: localization.en.navigation,
                 icon: "icon-package_install",
-                onclick: `r_before_modal("${config.id}")`,
-                modal_id: config.id
+                modal: config.id
             }
         }
         super(config, objects, content);

@@ -1,7 +1,7 @@
 
 var localization = {
     en: {
-        title: "K Nearest Neighbhors",
+        title: "K Nearest Neighbors",
         navigation: "KNN",
         dependentvar: "Dependent variable",
         independentvars: "Independent variable(s)",
@@ -15,7 +15,7 @@ var localization = {
         testDatasetName: "Enter the name of the testing dataset",
         predictedValues: "Enter variable prefix for predicted values. (You must specify a prefix) Prefixed variables are created in the testing dataset.",
         help: {
-            title: "K Nearest Neighbhors",
+            title: "K Nearest Neighbors",
             r_help: "help(knn, package ='class')",
             body: `
                 <b>Description</b></br>

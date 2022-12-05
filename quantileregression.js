@@ -1,7 +1,8 @@
 
 var localization = {
     en: {
-        title: "Quantile Regression",
+		label1: "To compare quantile regression model slopes, see \"Model Evaluation > Compare > Quant Reg Models\"",
+		title: "Quantile Regression",
         navigation: "Quantile",
         modelname:"Enter model name",
         depvarlabel: "Dependent Variable",
@@ -60,7 +61,7 @@ class QuantileRegression extends baseModal {
             RCode: `
 library(quantreg)
 library(broom)
-
+BSkyFormula = {{selected.depvar | safe}} ~ {{selected.modelterms | safe}}\n
 {{selected.modelname | safe}} <- rq({{selected.depvar | safe}} ~ {{selected.modelterms | safe}}, tau = {{selected.quantile | safe}}, data = {{dataset.name}}, method="{{selected.estgrp | safe}}", na.action=na.exclude)
 
 samp.size <- length({{selected.modelname | safe}}$fitted.values)
@@ -86,6 +87,12 @@ mod.coef <- cbind(mod.coef, conf.lower, conf.upper)
 
 BSkyFormat(mod.coef, singleTableOutputHeader="Parameter Estimates and 95% Confidence Intervals")
 
+#Setting attributes to support scoring
+attr(.GlobalEnv\${{selected.modelname | safe}},"depvar") = "{{selected.depvar | safe}}"
+attr(.GlobalEnv\${{selected.modelname | safe}},"indepvar") = paste ("'", paste (base::all.vars(BSkyFormula[-2]), collapse="','"), "'", sep="")
+attr(.GlobalEnv\${{selected.modelname | safe}},"classDepVar")= class({{dataset.name}}[, c("{{selected.depvar | safe}}")])
+attr(.GlobalEnv\${{selected.modelname | safe}},"depVarSample")= sample({{dataset.name}}[, c("{{selected.depvar | safe}}")], size = 2, replace = TRUE)
+if (exists("BSkyFormula")) rm (BSkyFormula)
 detach(package:quantreg)
 detach(package:SparseM)
 `
@@ -96,6 +103,7 @@ detach(package:SparseM)
                     action: "move"
                 })
             },
+			label1: { el: new labelVar(config, { label: localization.en.label1, h: 6 }) },
             modelname: {
                 el: new input(config, {
                     no: 'modelname',
@@ -264,6 +272,7 @@ detach(package:SparseM)
 
        
         const content = {
+			head: [objects.label1.el.content],
             left: [objects.content_var.el.content],
             right: [
                 objects.modelname.el.content, objects.depvar.el.content, objects.modelterms.el.content, objects.quantile.el.content,

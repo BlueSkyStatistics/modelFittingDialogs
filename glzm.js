@@ -9,6 +9,7 @@ var localization = {
         offset: "Offset",
         weights: "Weights",
         family: "Select a family and link function",
+        theta: "Specify a value of theta (applied for the negative binomial family only)",
         help: {
             title: "Generalized Linear Model",
             r_help: "help(glm, package ='stats')",
@@ -16,10 +17,12 @@ var localization = {
             <b>Description</b></br>
             glm is used to fit generalized linear models, specified by giving a symbolic description of the linear predictor and a description of the error distribution.
             <br/>
-NOTE: When specifying a variable containing weights, be aware that since we use the option na.exlude to build the model, all NA values are automatically removed from the dependent and independent variables.<br/> 
+NOTE 1: When specifying a variable containing weights, be aware that since we use the option na.exlude to build the model, all NA values are automatically removed from the dependent and independent variables.<br/> 
 This can cause a mismatch as NA values are NOT automatically removed from the weighting variable. <br/>
 In this situation you will see the error variable lengths differ (found for (weights))<br/>
 To address this error go to Variables>Missing Values>Remove NAs and select the dependent, independent variables and the weighting variable to remove missing values from and rebuild the model.<br/>
+NOTE 2: Dummy code factor variables, when using the negative.bimonial family, see Variables > Compute > Dummy Code. 
+
             <br/>
             <b>Usage</b>
             <br/>
@@ -96,7 +99,11 @@ class glzm extends baseModal {
 require(MASS);
 require(equatiomatic);
 require(textutils);
-{{selected.modelname | safe}} = glm({{selected.dependent | safe}}~{{selected.formula | safe}},family ={{selected.family | safe}}(link="{{selected.combokid | safe}}"), {{if(options.selected.weights != "")}}weights = {{selected.weights | safe}},{{/if}} na.action=na.exclude, data={{dataset.name}})
+{{if (options.selected.family == "negative.binomial")}}
+{{selected.modelname | safe}} = MASS::glm.nb({{selected.dependent | safe}}~{{selected.formula | safe}}, link="{{selected.combokid | safe}}", {{if(options.selected.weights != "")}}weights = {{selected.weights | safe}},{{/if}} na.action=na.exclude, data={{dataset.name}})
+{{#else}}
+{{selected.modelname | safe}} = glm({{selected.dependent | safe}}~{{selected.formula | safe}},family ={{selected.family | safe}}(link="{{selected.combokid | safe}}" {{if (options.selected.family == "negative.binomial")}}, theta = {{selected.theta | safe}}{{/if}}), {{if(options.selected.weights != "")}}weights = {{selected.weights | safe}},{{/if}} na.action=na.exclude, data={{dataset.name}})
+{{/if}}
 #Display theoretical model equation and coefficients
 #Display theoretical model
 reg_formula = equatiomatic::extract_eq({{selected.modelname | safe}}, raw_tex = FALSE,\n\t wrap = TRUE, intercept = "alpha", ital_vars = FALSE)  
@@ -113,6 +120,7 @@ BSkyFormat(exp(cbind(Exp_Coeff=coef({{selected.modelname | safe}}),confint.glm({
 #Adding attributes to support scoring
 attr(.GlobalEnv\${{selected.modelname | safe}},"classDepVar")= class({{dataset.name}}[, c("{{selected.dependent | safe}}")])
 attr(.GlobalEnv\${{selected.modelname | safe}},"depVarSample")= sample({{dataset.name}}[, c("{{selected.dependent | safe}}")], size = 2, replace = TRUE)
+{{/if}}
 `
         }
         var objects = {
@@ -168,23 +176,36 @@ attr(.GlobalEnv\${{selected.modelname | safe}},"depVarSample")= sample({{dataset
                     multiple: false,
                     extraction: "NoPrefix|UseComma",
                     options: [
-                        { "name": "gaussian", "value": ["identity", "inverse", "log"] },
                         { "name": "binomial", "value": ["logit", "probit", "cauchit","log","cloglog"] },
-                        { "name": "poisson", "value": [ "log","identity", "sqrt"] },
                         { "name": "Gamma", "value": ["inverse","identity",  "log"] },
+                        { "name": "gaussian", "value": ["identity", "inverse", "log"] },
                         { "name": "inverse.gaussian", "value": ["1/mu^2","identity", "inverse", "log" ] },
-                        { "name": "quasi", "value": [ "logit","probit","cloglog","identity","inverse", "log", "1/mu^2","sqrt"     ] },
+                        { "name": "negative.binomial", "value": ["log", "identity", "sqrt"] },
+                        { "name": "poisson", "value": [ "log","identity", "sqrt"] },
+                        { "name": "quasi", "value": [ "logit","probit","cloglog","identity","inverse", "log", "1/mu^2","sqrt" ] },
                         { "name": "quasibinomial", "value": ["logit", "probit", "cloglog"] },
                         { "name": "quasipoisson", "value": ["log","identity",  "sqrt"] },
                     ]
                 })
             },
+            theta: {
+                el: new input(config, {
+                    no: 'theta',
+                    label: localization.en.theta,
+                    placeholder: "",
+                    allow_spaces:true,
+                    value:"",
+                    width: "w-25",
+                    extraction: "NoPrefix|UseComma",
+                    type: "numeric",
+                })
+            }
         }
         const content = {
             head: [objects.modelname.el.content],
             left: [objects.content_var.el.content],
-            right: [objects.dependent.el.content, objects.formulaBuilder.el.content, objects.offset.el.content, objects.weights.el.content,],
-            bottom: [objects.family.el.content],
+            right: [objects.dependent.el.content, objects.formulaBuilder.el.content, objects.offset.el.content, objects.weights.el.content],
+            bottom: [objects.family.el.content, objects.theta.el.content],
             nav: {
                 name: localization.en.navigation,
                 icon: "icon-glz",

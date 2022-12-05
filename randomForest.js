@@ -2,6 +2,7 @@
 var localization = {
     en: {
         title: "Random Forest",
+        label1: "Random forest can be run in supervised or unsupervised node. To run in unsupervised mode, don't specify a dependent variable.",
         navigation: "Random Forest",
         modelname: "Enter model name",
         dependentvar: "Dependent variable",
@@ -102,7 +103,7 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
     #Saving proximity measures to the dataset 
     .GlobalEnv\${{selected.newds | safe}} <- as.data.frame( {{selected.modelname | safe}}$proximity )
     #Multi-dimensional Scaling Plot of Proximity matrix from randomForest
-    {{if ( options.selected.dependentvar !="")}}results<-randomForest::MDSplot({{selected.modelname | safe}}, {{selected.dependentvar | safe}}, main="Multi-dimensional Scaling Plot of Proximity matrix"){{/if}}
+    {{if ( options.selected.dependentvar !="")}}results <- randomForest::MDSplot({{selected.modelname | safe}}, {{selected.dependentvar | safe}}, main="Multi-dimensional Scaling Plot of Proximity matrix"){{/if}}
     #Loading the newly created Proximity dataset in the grid
     BSkyLoadRefresh({{if (options.selected.newds !== "")}}"{{selected.newds | safe}}"{{/if}})
     {{/if}}
@@ -112,15 +113,24 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
     BSkyLoadRefresh("{{dataset.name}}")
     {{/if}}
     #Adding attributes to support scoring
-    attr(.GlobalEnv\${{selected.modelname | safe}},"depvar") = paste ("'", sub(".*\\\\$", "", '{{selected.dependentvar | safe}}'), "'", sep="")
     attr(.GlobalEnv\${{selected.modelname | safe}},"indepvar") ="{{selected.independentvars | safe}}"
+    {{if ( options.selected.dependentvar !="")}}
     attr(.GlobalEnv\${{selected.modelname | safe}},"classDepVar") = class({{selected.dependentvar | safe}})
+    attr(.GlobalEnv\${{selected.modelname | safe}},"depvar") = paste ("'", sub(".*\\\\$", "", '{{selected.dependentvar | safe}}'), "'", sep="")
     attr(.GlobalEnv\${{selected.modelname | safe}},"depVarSample") = sample({{selected.dependentvar | safe}}, size = 2, replace = TRUE)
+    {{/if}}
+    {{if ( options.selected.dependentvar =="" && options.selected.proximity =="TRUE")}}
+    cat ("ERROR: A proximity matrix is not genenerated in unsupervised mode\n")
+    {{/if}}
+    {{if ( options.selected.dependentvar =="" && options.selected.predictor == "TRUE")}}
+    cat ("ERROR: Predictions are not genenerated in unsupervised mode\n")
+    {{/if}}
 }
 `
         };
         var objects = {
             content_var: { el: new srcVariableList(config, {action: "move"}) },
+            label1: { el: new labelVar(config, { label: localization.en.label1, h: 6 }) },
             modelname: {
                 el: new input(config, {
                     no: 'modelname',
@@ -139,7 +149,6 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
                     no: "dependentvar",
                     filter: "String|Numeric|Logical|Ordinal|Nominal|Scale",
                     extraction: "Prefix|UseComma",
-                    required: true,
                 }), r: ['{{ var | safe}}']
             },
             independentvars: {
@@ -176,10 +185,7 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
                 el: new checkbox(config, {
                     label: localization.en.proximity,
                     no: "proximity",
-                    bs_type: "valuebox",
-                    extraction: "BooleanValue",
-                    true_value: "TRUE",
-                    false_value: "FALSE",
+                    style: "ml-2",
                     required: true,
                     dependant_objects: ["newds"],
                 })
@@ -198,10 +204,6 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
                 el: new checkbox(config, {
                     label: localization.en.predictor,
                     no: "predictor",
-                    bs_type: "valuebox",
-                    extraction: "BooleanValue",
-                    true_value: "TRUE",
-                    false_value: "FALSE",
                     required: true,
                     dependant_objects: ["newcolname"],
                 })
@@ -209,6 +211,7 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
             newcolname: {
                 el: new input(config, {
                     no: 'newcolname',
+                    style: "ml-2",
                     label: localization.en.newcolname,
                     placeholder: "",
                     type: "character",
@@ -230,6 +233,7 @@ if( !exists('{{selected.modelname | safe}}' ) || is.null({{selected.modelname | 
             )
         }
         const content = {
+            head: [objects.label1.el.content],
             left: [objects.content_var.el.content],
             right: [objects.modelname.el.content, objects.dependentvar.el.content, objects.independentvars.el.content, objects.ntree.el.content, objects.mtry.el.content],
             bottom: [options1.el.content],

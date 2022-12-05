@@ -97,7 +97,7 @@ if (validateDataRatingScale(vars=c({{selected.destinationvars | safe}}),data= "{
                   label: localization.en.firstlevel,
                   no: "firstlevel",
                   filter: "String|Numeric|Date|Logical|Ordinal|Nominal|Scale",
-                  extraction: "NoPrefix|UseComma|Enclosed",
+                  extraction: "NoPrefix|UseComma",
                   required: true,
                 }),
               },

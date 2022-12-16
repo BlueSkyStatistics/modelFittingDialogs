@@ -65,8 +65,7 @@ require(TAM);
 if (!validateDataRasch( vars =c({{selected.destinationvars | safe}}), data ="{{dataset.name}}"))
 {
     cat("\nAll variables being analyzed to create a multi-faceted Simple Rasch Model must have unique values of either 0 or 1. Please recode the variables (see Data->Recode) to meet these requirements and re-run the analysis")
-}
-else
+} else
 {
     {{selected.modelname | safe}} <- tam.mml.mfr( {{dataset.name}}[,c({{selected.destinationvars | safe}})]  ,  facets={{dataset.name}}[,c("{{selected.secondlevel | safe}}"),drop=FALSE] , formulaA = ~ item+{{selected.secondlevel | safe}} , pid = {{dataset.name}}\${{selected.firstlevel | safe}},verbose=FALSE)
     BSkySummary.tam.mml({{selected.modelname | safe}})

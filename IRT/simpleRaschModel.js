@@ -95,8 +95,7 @@ require(TAM);
 if (!validateDataRasch( vars =c({{selected.destinationvars | safe}}), data ="{{dataset.name}}"))
 {
     cat("\nAll variables being analyzed to create a simple  RASCH model must be dichotomous with unique values of either 0 or 1. Please recode the variables (see Data->Recode) to meet these requirements and re-run the analysis")
-}
-else
+} else
 {
     if ("{{selected.estimation | safe}}"=="CML")
     {

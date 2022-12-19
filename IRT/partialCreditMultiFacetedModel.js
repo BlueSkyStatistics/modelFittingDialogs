@@ -120,7 +120,7 @@ BSkySummary.tam.mml({{selected.modelname | safe}})
             ],
             nav: {
                 name: localization.en.navigation,
-                icon: "icon-p_a_given_b",
+                icon: "icon-pcmf",
                 modal: config.id
             }
         };

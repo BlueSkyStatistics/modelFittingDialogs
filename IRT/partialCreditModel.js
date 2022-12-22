@@ -193,7 +193,7 @@ if (validateDataPartialCredit(vars =c({{selected.destinationvars | safe}}), data
             ],
             nav: {
                 name: localization.en.navigation,
-                icon: "icon-p_a_given_b",
+                icon: "icon-pc",
                 modal: config.id
             }
         };

@@ -195,7 +195,7 @@ if (!validateDataRasch( vars =c({{selected.destinationvars | safe}}), data ="{{d
             ],
             nav: {
                 name: localization.en.navigation,
-                icon: "icon-p_a_given_b",
+                icon: "icon-s",
                 modal: config.id
             }
         };

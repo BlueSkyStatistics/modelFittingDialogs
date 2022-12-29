@@ -3,12 +3,13 @@ var localization = {
     en: {
         title: "Cox, Basic",
         navigation: "Cox, Basic",
+		helplabel: "Click on the ? button on the top right of the dialog for details on sample datasets and the data format supported.",
         modelname:"Enter Model Name",
         timevar: "Time to event or censor",
         eventvar: "Events (1 = event 1, 0 = censor)",
         destvars:"Independent Variables",
         weightvar: "Weights (optional)",
-		label1: "Click on the ? button on the top right of the dialog for details on sample datasets and the data format supported.",
+
         tiemethod: "Tied Time Method",
         forestplotbox : "Forest Plot",
         diagnosticsbox: "Model Diagnostics",
@@ -20,8 +21,10 @@ var localization = {
             title: "Cox, Basic",
             r_help: "help(coxph, package = 'survival')",
             body: `
-			See sample dataset in the install directory, the default location is at drive letter:\\program files\\BlueSky Statistics\\10\\Samples_and_Documents\\Datasets_and_Demos\\Regression_Cox\\mockstudy_upd.RData. The variable Followup_time should be entered as the time to event or censor and the variable Event should be entered as the Events (1 = event, 0 = censor). Sex, age and bmi can be the independent variables.<br/>
-            This dataset is an updated version of the mockstudy dataset in the arsenal package.<br/><br/>
+			See sample dataset in the install directory, the default location is at drive letter:&bsol;program files&bsol;BlueSky Statistics&bsol;10&bsol;Samples_and_Documents&bsol;Datasets_and_Demos&bsol;Regression_Cox&bsol;mockstudy_upd.RData. The variable Followup_time should be entered as the time to event or censor and the variable Event should be entered as the Events (1 = event, 0 = censor). Sex, age and bmi can be the independent variables. 
+			<br/>
+			This dataset is an updated version of the mockstudy dataset in the arsenal package.
+			<br/><br/>
             <b>Cox Proportional Hazards Model</b>
             <br/>
             <br/>
@@ -77,39 +80,40 @@ class CoxSingleModel extends baseModal {
             label: localization.en.title,
             modalType: "two",
             RCode: `
-            require(survival)
-            require(broom)
-            require(survminer)
-            require(car)
+require(survival)
+require(broom)
+require(survminer)
+require(car)
 
-            {{selected.modelname | safe}}<-coxph(Surv({{selected.timevar | safe}},{{selected.eventvar | safe}}) ~ {{selected.destvars | safe}}, data={{dataset.name}}, ties="{{selected.tiemethod | safe}}", {{selected.weightvar | safe}} na.action=na.exclude)
-            cox_summary<-t(glance({{selected.modelname | safe}}))
-            cox_est<-as.data.frame(tidy({{selected.modelname | safe}}, conf.int=TRUE))
-            cox_hr<-as.data.frame(tidy({{selected.modelname | safe}},exponentiate=TRUE, conf.int=TRUE))
-            
-            BSkyFormat(cox_summary,singleTableOutputHeader="Cox Model Summary for Surv({{selected.timevar | safe}},{{selected.eventvar | safe}})")
-            BSkyFormat(cox_est,singleTableOutputHeader="Parameter Estimates")
-            BSkyFormat(cox_hr,singleTableOutputHeader="Hazard Ratios (HR) and 95% Confidence Intervals")
-            
-            if ({{selected.devbox | safe}})
-            {
-            anovatable<-Anova({{selected.modelname | safe}},type=2,test.statistic="{{selected.devtype | safe}}")
-            BSkyFormat(as.data.frame(anovatable),singleTableOutputHeader="Analysis of Deviance (Type II)")
-            }
-            
-            if ({{selected.diagnosticsbox | safe}})
-            {
-            prophaz<-as.data.frame(cox.zph({{selected.modelname | safe}})$table)
-            BSkyFormat(prophaz,singleTableOutputHeader="Proportional Hazards Tests")
-            print(plot(cox.zph({{selected.modelname | safe}}), hr=TRUE))
-            print(ggcoxfunctional({{selected.modelname | safe}},data={{dataset.name}},ylim=c({{selected.martscalebox | safe}},1)))
-            print(ggcoxdiagnostics({{selected.modelname | safe}}))
-            }
-            
-            if ({{selected.forestplotbox | safe}})
-            {
-            print(ggforest({{selected.modelname | safe}},data={{dataset.name}}))
-            }            
+# model fit and output
+{{selected.modelname | safe}}<-coxph(Surv({{selected.timevar | safe}},{{selected.eventvar | safe}}) ~ {{selected.destvars | safe}}, data={{dataset.name}}, ties="{{selected.tiemethod | safe}}", {{selected.weightvar | safe}} na.action=na.exclude)
+cox_summary<-t(glance({{selected.modelname | safe}}))
+cox_est<-as.data.frame(tidy({{selected.modelname | safe}}, conf.int=TRUE))
+cox_hr<-as.data.frame(tidy({{selected.modelname | safe}},exponentiate=TRUE, conf.int=TRUE))
+
+BSkyFormat(cox_summary,singleTableOutputHeader="Cox Model Summary for Surv({{selected.timevar | safe}},{{selected.eventvar | safe}})")
+BSkyFormat(cox_est,singleTableOutputHeader="Parameter Estimates")
+BSkyFormat(cox_hr,singleTableOutputHeader="Hazard Ratios (HR) and 95% Confidence Intervals")
+
+{{if (options.selected.devbox=="TRUE")}}
+# analysis of deviance option
+anovatable<-Anova({{selected.modelname | safe}},type=2,test.statistic="{{selected.devtype | safe}}")
+BSkyFormat(as.data.frame(anovatable),singleTableOutputHeader="Analysis of Deviance (Type II)")
+{{/if}}
+
+{{if (options.selected.diagnosticsbox=="TRUE")}}
+# diagnostics option
+prophaz<-as.data.frame(cox.zph({{selected.modelname | safe}})$table)
+BSkyFormat(prophaz,singleTableOutputHeader="Proportional Hazards Tests")
+plot(cox.zph({{selected.modelname | safe}}), hr=TRUE, col=2, lwd=2)
+ggcoxfunctional({{selected.modelname | safe}},data={{dataset.name}},ylim=c({{selected.martscalebox | safe}},1))
+ggcoxdiagnostics({{selected.modelname | safe}})
+{{/if}}
+
+{{if (options.selected.forestplotbox=="TRUE")}}
+# forest plot option
+ggforest({{selected.modelname | safe}},data={{dataset.name}})
+{{/if}}            
 `
         }
         var objects = {
@@ -118,6 +122,13 @@ class CoxSingleModel extends baseModal {
                     action: "move"
                 })
             },
+			helplabel: {
+				el: new labelVar(config, {
+				label: localization.en.helplabel, 
+				style: "mt-3", 
+				h:5
+				})
+			},			
             modelname: {
                 el: new input(config, {
                     no: 'modelname',
@@ -127,8 +138,7 @@ class CoxSingleModel extends baseModal {
                     type: "character",
                     extraction: "TextAsIs",
                     value: "CoxRegModel1",
-					style: "mb-3",
-                    overwrite: "dataset"
+					style: "mb-3"
                 })
             },              
             timevar: {
@@ -229,14 +239,7 @@ class CoxSingleModel extends baseModal {
                     default: "Wald",
                     style:"ml-3"
                 })
-            },  
-            label1: {
-                el: new labelVar(config, {
-                  label: localization.en.label1, 
-                  style: "mt-3", 
-                  h:5
-                })
-              }, 			
+            },             
 
         }
         var options = {
@@ -255,8 +258,8 @@ class CoxSingleModel extends baseModal {
         };
        
         const content = {
-			head: [objects.label1.el.content],
-            left: [objects.content_var.el.content],
+            head: [objects.helplabel.el.content],
+			left: [objects.content_var.el.content],
             right: [
 				objects.modelname.el.content,
                 objects.timevar.el.content,

@@ -13,7 +13,7 @@ const nav = {
         "./glzm",
         {
             "name": "IRT",
-            "icon": "icon-brightness-and-contrast",
+            "icon": "icon-lamp",
             "children": [
                 "./IRT/simpleRaschModel",
                 "./IRT/simpleRaschMultiFacetedModel",

@@ -2,6 +2,7 @@ const nav = {
     "name": "Model Fitting",
     "tab": "model_fitting",
     "buttons": [
+        
         {
             "name": "Contrasts",
             "icon": "icon-brightness-and-contrast",
@@ -35,8 +36,6 @@ const nav = {
             "name": "Regression",
             "icon": "icon-linear_regression_white_comp",
             "children": [
-                "./Survival/CoxWithFormula",
-                "./Survival/CoxSingleModel",
                 "./linearRegression",
                 "./linearRegressionLegacy",
                 "./linearRegressionFormula",

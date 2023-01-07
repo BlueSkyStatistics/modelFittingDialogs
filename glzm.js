@@ -17,12 +17,13 @@ var localization = {
             <b>Description</b></br>
             glm is used to fit generalized linear models, specified by giving a symbolic description of the linear predictor and a description of the error distribution.
             <br/>
-NOTE 1: When specifying a variable containing weights, be aware that since we use the option na.exlude to build the model, all NA values are automatically removed from the dependent and independent variables.<br/> 
+NOTE 1: A textbox is provided to specify the initial value of theta, this applies only to the negative binomial family. If omitted a moment estimator after an initial fit using a Poisson GLM is used.<br/>
+The initial theta that is computed is displayed in the output above the GLM summary table.<br/>
+NOTE 2: When specifying a variable containing weights, be aware that since we use the option na.exlude to build the model, all NA values are automatically removed from the dependent and independent variables.<br/> 
 This can cause a mismatch as NA values are NOT automatically removed from the weighting variable. <br/>
 In this situation you will see the error variable lengths differ (found for (weights))<br/>
 To address this error go to Variables>Missing Values>Remove NAs and select the dependent, independent variables and the weighting variable to remove missing values from and rebuild the model.<br/>
-NOTE 2: Dummy code factor variables, when using the negative.bimonial family, see Variables > Compute > Dummy Code. 
-
+NOTE 3: Dummy code factor variables, when using the negative.bimonial family, see Variables > Compute > Dummy Code. 
             <br/>
             <b>Usage</b>
             <br/>
@@ -99,11 +100,14 @@ class glzm extends baseModal {
 require(MASS);
 require(equatiomatic);
 require(textutils);
+#Removing temporary objects
+if (exists("{{selected.modelname | safe}}")) rm({{selected.modelname | safe}})
 {{if (options.selected.family == "negative.binomial")}}
-{{selected.modelname | safe}} = MASS::glm.nb({{selected.dependent | safe}}~{{selected.formula | safe}}, link="{{selected.combokid | safe}}", {{if(options.selected.weights != "")}}weights = {{selected.weights | safe}},{{/if}} na.action=na.exclude, data={{dataset.name}})
+{{selected.modelname | safe}} = MASS::glm.nb({{selected.dependent | safe}}~{{selected.formula | safe}}, link="{{selected.combokid | safe}}",{{if (options.selected.theta != "")}}init.theta = {{selected.theta | safe}}, {{/if}} {{if(options.selected.weights != "")}}weights = {{selected.weights | safe}},{{/if}} na.action=na.exclude, data={{dataset.name}})
 {{#else}}
 {{selected.modelname | safe}} = glm({{selected.dependent | safe}}~{{selected.formula | safe}},family ={{selected.family | safe}}(link="{{selected.combokid | safe}}" {{if (options.selected.family == "negative.binomial")}}, theta = {{selected.theta | safe}}{{/if}}), {{if(options.selected.weights != "")}}weights = {{selected.weights | safe}},{{/if}} na.action=na.exclude, data={{dataset.name}})
 {{/if}}
+{{if (!((options.selected.family == "negative.binomial" && options.selected.combokid =="identity") || (options.selected.family == "negative.binomial" && options.selected.combokid =="sqrt")) )}}
 #Display theoretical model equation and coefficients
 #Display theoretical model
 reg_formula = equatiomatic::extract_eq({{selected.modelname | safe}}, raw_tex = FALSE,\n\t wrap = TRUE, intercept = "alpha", ital_vars = FALSE)  
@@ -111,9 +115,15 @@ BSkyFormat(reg_formula)
 #Display coefficients
 reg_equation = equatiomatic::extract_eq({{selected.modelname | safe}}, use_coefs = TRUE,\n\t wrap = TRUE,ital_vars = FALSE, coef_digits = BSkyGetDecimalDigitSetting() )
 BSkyFormat(reg_equation)
+{{/if}}
 BSky_GLM_Summary_{{selected.modelname | safe}} = summary({{selected.modelname | safe}})
+{{if (options.selected.family == "negative.binomial")}}
+BSky_orig_class = class(BSky_GLM_Summary_{{selected.modelname | safe}})
+BSky_GLM_Summary_{{selected.modelname | safe}} = BSky_GLM_Summary_{{selected.modelname | safe}} [!is.na(names(BSky_GLM_Summary_{{selected.modelname | safe}}))]
+class(BSky_GLM_Summary_{{selected.modelname | safe}}) = unique(c("summary.glm", BSky_orig_class))
+{{/if}}
 BSkyFormat(BSky_GLM_Summary_{{selected.modelname | safe}})
-{{if (options.selected.combokid =="log" || options.selected.combokid =="logit")}}
+{{if ((options.selected.combokid =="log" || options.selected.combokid =="logit") && (options.selected.family == "binomial"))}}
 #Exponents of the coefficients and 95% confidence interval
 BSkyFormat(exp(cbind(Exp_Coeff=coef({{selected.modelname | safe}}),confint.glm({{selected.modelname | safe}},level=0.95))),singleTableOutputHeader='Exponentiated coefficient estimates and 95% confidence intervals')
 {{/if}}

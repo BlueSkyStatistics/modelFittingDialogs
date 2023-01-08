@@ -718,7 +718,7 @@ BSkyFormat(as.data.frame(unclass(BSkyRsquared[[2]])), singleTableOutputHeader = 
                     for (var covar in covariates) {
                         tempoutput += "ggplot(data =" + code_vars.dataset.name + ", aes(x = " + covar + ", y = " + code_vars.selected.tvarbox1 +
                             ",group = " + code_vars.selected.NestingVar + "))" + "+\n\t geom_point() +\n\t geom_line() +\n\t xlab(\"" + covar + "\")" +
-                            "+\n\t ylab(\"" + code_vars.selected.tvarbox1 + "\")" + " +\n\t ylim(min(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "),max(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "))" + "+\n\t ggtitle(\"Observed Spaghetti Plots\")" + "+\n\t scale_x_continuous(breaks = seq(min(" + code_vars.dataset.name + "$" + covar + "), max(" + code_vars.dataset.name + "$" + covar + ")))\n";
+                            "+\n\t ylab(\"" + code_vars.selected.tvarbox1 + "\")" + " +\n\t ylim(min(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "),max(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "))" + "+\n\t ggtitle(\"Observed Spaghetti Plots\")" + "+\n\t scale_x_continuous(breaks = seq(min(" + code_vars.dataset.name + "$" + covar + "), max(" + code_vars.dataset.name + "$" + covar + ")))" + "+\n\t" + "{{selected.BSkyThemes | safe}}";
                     }
                 }
                 else {
@@ -735,7 +735,7 @@ BSkyFormat(as.data.frame(unclass(BSkyRsquared[[2]])), singleTableOutputHeader = 
                     for (var covar in covariates) {
                         tempoutput += "ggplot(data =" + code_vars.dataset.name + ", aes(x = " + covar + ", y = " + predictions +
                             ",group = " + code_vars.selected.NestingVar + "))" + " +\n\t geom_point() +\n\t geom_line() +\n\t xlab(\"" + covar + "\")" +
-                            " +\n\t ylab(\"" + code_vars.selected.tvarbox1 + "\")" + " +\n\t ylim(min(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "),max(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "))" + " +\n\t ggtitle(\"Estimated Spaghetti Plots\")" + " +\n\t scale_x_continuous(breaks = seq(min(" + code_vars.dataset.name + "$" + covar + "), max(" + code_vars.dataset.name + "$" + covar + ")))\n";
+                            " +\n\t ylab(\"" + code_vars.selected.tvarbox1 + "\")" + " +\n\t ylim(min(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "),max(" + code_vars.dataset.name + "$" + code_vars.selected.tvarbox1 + "))" + " +\n\t ggtitle(\"Estimated Spaghetti Plots\")" + " +\n\t scale_x_continuous(breaks = seq(min(" + code_vars.dataset.name + "$" + covar + "), max(" + code_vars.dataset.name + "$" + covar + ")))" + "+\n\t" + "{{selected.BSkyThemes | safe}}";
                     }
                 }
                 else {

@@ -2,6 +2,7 @@ const nav = {
     "name": "Model Fitting",
     "tab": "model_fitting",
     "buttons": [
+        
         {
             "name": "Contrasts",
             "icon": "icon-brightness-and-contrast",
@@ -13,14 +14,14 @@ const nav = {
         "./glzm",
         {
             "name": "IRT",
-            "icon": "icon-brightness-and-contrast",
+            "icon": "icon-lamp",
             "children": [
-                "./IRT/simpleRaschModel",
-                "./IRT/simpleRaschMultiFacetedModel",
                 "./IRT/partialCreditModel",
-                "./IRT/partialCreditMultiFacetedModel",
+                "./IRT/partialCreditMultiFacetedModel",   
                 "./IRT/ratingScaleModel",
-                "./IRT/ratingScaleMultiFacetedModel"
+                "./IRT/ratingScaleMultiFacetedModel",			
+                "./IRT/simpleRaschModel",
+                "./IRT/simpleRaschMultiFacetedModel"
             ]
         },
         {
@@ -35,13 +36,11 @@ const nav = {
             "name": "Regression",
             "icon": "icon-linear_regression_white_comp",
             "children": [
-                "./Survival/CoxWithFormula",
-                "./Survival/CoxSingleModel",
+                "./linearRegressionFormula",
                 "./linearRegression",
                 "./linearRegressionLegacy",
-                "./linearRegressionFormula",
-                "./logisticRegression",
                 "./logisticRegressionFormula",
+                "./logisticRegression",
                 "./multiNomialLogistic",
                 "./ordinalRegression",
                 "./quantileregression",
@@ -63,8 +62,8 @@ const nav = {
             "children": [
                 "./decisionTrees",
                 "./extremeGradientBoosting",
+                "./optimalNoTrees",                
                 "./randomForest",
-                "./optimalNoTrees",
                 "./tuneRandomForest"
             ]
         },

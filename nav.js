@@ -16,12 +16,12 @@ const nav = {
             "name": "IRT",
             "icon": "icon-lamp",
             "children": [
-                "./IRT/simpleRaschModel",
-                "./IRT/simpleRaschMultiFacetedModel",
                 "./IRT/partialCreditModel",
-                "./IRT/partialCreditMultiFacetedModel",
+                "./IRT/partialCreditMultiFacetedModel",   
                 "./IRT/ratingScaleModel",
-                "./IRT/ratingScaleMultiFacetedModel"
+                "./IRT/ratingScaleMultiFacetedModel",			
+                "./IRT/simpleRaschModel",
+                "./IRT/simpleRaschMultiFacetedModel"
             ]
         },
         {
@@ -36,11 +36,11 @@ const nav = {
             "name": "Regression",
             "icon": "icon-linear_regression_white_comp",
             "children": [
+                "./linearRegressionFormula",
                 "./linearRegression",
                 "./linearRegressionLegacy",
-                "./linearRegressionFormula",
-                "./logisticRegression",
                 "./logisticRegressionFormula",
+                "./logisticRegression",
                 "./multiNomialLogistic",
                 "./ordinalRegression",
                 "./quantileregression",
@@ -62,8 +62,8 @@ const nav = {
             "children": [
                 "./decisionTrees",
                 "./extremeGradientBoosting",
+                "./optimalNoTrees",                
                 "./randomForest",
-                "./optimalNoTrees",
                 "./tuneRandomForest"
             ]
         },

@@ -276,6 +276,24 @@ require(broom)
         BSky_Results_glance <-as.data.frame(glance({{selected.model | safe}}))
         BSkyFormat(BSky_Results_glance, singleTableOutputHeader="Model Statistics")  
 
+        #To get test of all slopes equal to zero
+        #First I run a null model with only intercept as a predictor, then I compare
+
+        {{selected.model | safe}}_null = MASS::polr({{selected.dependent | safe}}~1, 
+            method = '{{selected.method | safe}}', Hess = TRUE, weights ={{selected.weights | safe}}, 
+            na.action=na.exclude, data={{dataset.name}})
+        BSkyTestSlopes <- stats::anova(OrdinalReg, OrdinalReg_null)
+        BSkyTestSlopes <- as.data.frame(BSkyTestSlopes)
+        BSkyTestSlopes <- cbind(Description= c("Null model", "Specified model"), BSkyTestSlopes)
+        BSkyFormat(as.data.frame(BSkyTestSlopes), singleTableOutputHeader = "Test of all slopes equal to zero" )
+
+        #To get Somers' D, Goodman-Kruskal Gamma, Kendall's Tau-A
+        #All use DescTools and I produce 95% CIs, which Minitab does not.
+        DescTools::SomersDelta(cleaned_web_survey_data$Q17,cleaned_web_survey_data$Q3, conf.level = 0.95)
+        DescTools::GoodmanKruskalGamma(cleaned_web_survey_data$Q17,cleaned_web_survey_data$Q3, conf.level = 0.95)
+        DescTools::KendallTauA(cleaned_web_survey_data$Q17,cleaned_web_survey_data$Q3, conf.level = 0.95)
+
+
         #Adding attributes to support scoring
         attr(.GlobalEnv\${{selected.model | safe}},"classDepVar") = class({{dataset.name}}[, c("{{selected.dependent | safe}}")])
         attr(.GlobalEnv\${{selected.model | safe}},"depVarSample") = sample({{dataset.name}}[, c("{{selected.dependent | safe}}")], size = 2, replace = TRUE)
